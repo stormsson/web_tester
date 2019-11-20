@@ -1,0 +1,11 @@
+  -
+    url: 'https://www.github.com'
+    validators:
+      -
+        type: contains
+        selector: h1
+        contains: Built
+      -
+        type: contains
+        selector: p
+        contains: Github
