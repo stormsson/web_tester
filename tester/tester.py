@@ -98,20 +98,6 @@ class Tester():
 
         return txt
 
-    # def print_results(self):
-    #     for r in self.results:
-    #         char = "\u221A" if r['success'] else "X"
-    #         print("(%s) URL: %s" %  (char, r['url']))
-    #         print("- assertions: %d" % len(r['assertions']))
-    #         for a in r['assertions']:
-    #             char = "\u221A" if a['success'] else "X"
-    #             print("-- (%s): %s" % (char, a['text']))
-    #             if not a['success']:
-    #                 print("---: %s" % a['error'])
-    #         print("\n")
-
-
-
     def run_test(self, page):
 
         for t in page:
@@ -147,23 +133,3 @@ class Tester():
             self.driver.close()
             self.driver = None
             self.driverType = None
-
-
-
-    # def do_test(self):
-    #     start_time = time.time()
-
-    #     # self..get('https://www.febalcasa.com/it/')
-    #     self.driver.get('https://www.ferrari.com/en-EN/auto/f8-tributo')
-
-    #     #pippo = self.driver.find_element_by_css_selector("div.main")
-    #     try:
-    #         pippo = self.driver.find_element_by_css_selector("h1")
-    #         print ("EEE" + pippo.text)
-    #     except Exception as e:
-    #         pass
-
-
-    #     print ("title: " + self.driver.title)
-
-    #     print ("\n--- Closing: {} seconds ---".format((time.time() - start_time)))
