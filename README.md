@@ -28,12 +28,14 @@ All validators will have a `type` field, to define which validator is used
 ```
 
 | field | sample value | Description |
+|-------|--------------|-------------|
 | selector | h1 | css selector to use for the search |
 | contains | text | *optional* if present the DOM element must contain this text |
 
 ## Custom configuration
 
 | parameter | sample value | Description |
+|-----------|--------------|-------------|
 | pool_size | 4 | number of parallel processes |
 
 
