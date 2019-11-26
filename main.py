@@ -18,13 +18,13 @@ def load_yaml(filePath):
 
 def run_instance(test_setup):
 
-    test_instance = test_setup[1]
+    #( driver type, test suite, init_options)
+    test_suite = test_setup[1]
 
-    t = Tester(test_setup[0])
-    print(t)
+    t = Tester(driver_type=test_setup[0], init_options=test_setup[2])
 
-    if bool(test_instance):
-        t.run_test(test_instance)
+    if bool(test_suite):
+        t.run_test(test_suite)
         # t.print_results()
         print(t)
     t.closeDriver()
@@ -35,11 +35,13 @@ def run_instance(test_setup):
 if __name__ == '__main__':
     config = load_yaml('./configuration.yml')
     test_suite = load_yaml('./suite.yml')
-    # print(test_suite)
-    # exit()
 
     if config["pool_size"]:
         POOL_SIZE = config["pool_size"]
+
+    tester_init_options=None
+    if config["tester_init_options"]:
+        tester_init_options = config["tester_init_options"]
 
     print("starting test with %d parallel instances" % POOL_SIZE)
 
@@ -50,7 +52,8 @@ if __name__ == '__main__':
 
     testers = []
     for i in range(POOL_SIZE):
-        testers.append( ( Tester.DRIVER_CHROME, x[i]) )
+        # testers.append( ( Tester.DRIVER_FIREFOX, x[i], tester_init_options) )
+        testers.append( ( Tester.DRIVER_CHROME, x[i], tester_init_options) )
 
     with Pool(processes=POOL_SIZE) as pool:
         pool.map(run_instance, testers)

@@ -16,7 +16,14 @@ The tester relies on a Docker image that can be built with
 
 
 ## Validators
-All validators will have a `type` field, to define which validator is used
+All validators will have a `type` field, to define which validator is used.
+There are two types of validators:
+
+**validators** will use Selenium as a driver for testing.
+They are currently defined in `tester/validators.py`
+
+**request_validators** will use python requests library in order to fetch the url
+They are currently defined in `tester/request_validators.py`
 
 ### contains
 
@@ -30,7 +37,34 @@ All validators will have a `type` field, to define which validator is used
 | field | sample value | Description |
 |-------|--------------|-------------|
 | selector | h1 | css selector to use for the search |
-| contains | text | *optional* if present the DOM element must contain this text |
+| contains | text | **optional** if present the DOM element must contain this text |
+
+### header
+
+```yml
+-
+    type: header
+    name: content-type
+    contains: json
+```
+
+| field | sample value | Description |
+|-------|--------------|-------------|
+| name | content-type | name of the header to check |
+| contains | text | **optional** if present the header must contain this text |
+
+### http_status
+
+```yml
+-
+    type: http_status
+    is: 200
+```
+
+| field | sample value | Description |
+|-------|--------------|-------------|
+| is | 200 | http status to check |
+
 
 ## Custom configuration
 
@@ -46,3 +80,4 @@ All validators will have a `type` field, to define which validator is used
 ## Next steps
 1. Add more webdrivers
 2. Add more validators
+3. add array to http_status validator
