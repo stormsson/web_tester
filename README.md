@@ -12,15 +12,18 @@ The tester relies on a Docker image that can be built with
 
 ### Create a test session
 1) create a `suite.yml` file, structured as the example provided `suite_example.yml`
-2) run `docker run --rm -ti -v $(pwd):/app webtester:latest python main.py`
+2) run `docker run --rm -ti -v $(pwd):/app webtester:latest python main.py` from your project dir
+
+by default the run only checks request validators, if you need to enable selenium testing run
+2) run `docker run --rm -ti -v $(pwd):/app webtester:latest python main.py --selenium`
 
 
 ## Validators
 All validators will have a `type` field, to define which validator is used.
-There are two types of validators:
+In the `suite.yml` you can define two different types of validators:
 
 **validators** will use Selenium as a driver for testing.
-They are currently defined in `tester/validators.py`
+They are currently defined in `tester/selenium_validators.py`
 
 **request_validators** will use python requests library in order to fetch the url
 They are currently defined in `tester/request_validators.py`
@@ -81,3 +84,4 @@ They are currently defined in `tester/request_validators.py`
 1. Add more webdrivers
 2. Add more validators
 3. add array to http_status validator
+4. add tests

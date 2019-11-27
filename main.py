@@ -3,13 +3,16 @@ import os
 import time
 import yaml
 import selenium
+import argparse
 
-from tester.tester import Tester
+from tester.selenium_tester import SeleniumTester
+from tester.request_tester import RequestTester
 from tester.test_partition import TestPartition
 
 from multiprocessing import Process, Pool
 
 POOL_SIZE = 2
+args = []
 
 def load_yaml(filePath):
     with open(filePath, 'r') as f:
@@ -19,18 +22,42 @@ def load_yaml(filePath):
 def run_instance(test_setup):
 
     #( driver type, test suite, init_options)
-    test_suite = test_setup[1]
+    # test_suite = test_setup[1]
 
-    t = Tester(driver_type=test_setup[0], init_options=test_setup[2])
+    (driver_type, test_suite, init_options) = test_setup
+
+    if driver_type == 'RequestTester':
+        try:
+            v = test_suite[0]['request_validators']
+            if v:
+                t = RequestTester()
+        except KeyError as e:
+            test_suite = False
+    else:
+        try:
+            v = test_suite[0]['validators']
+            if v :
+                t = SeleniumTester(driver_type=driver_type, init_options=init_options)
+                t.init_driver()
+        except KeyError as e:
+            test_suite = False
+
 
     if bool(test_suite):
         t.run_test(test_suite)
-        # t.print_results()
         print(t)
-    t.closeDriver()
+        t.close_driver()
 
     return
 
+def parse_arguments():
+    global args
+    parser = argparse.ArgumentParser(description='Test things on the interwebs.')
+    parser.add_argument('--selenium', dest='use_selenium',action='store_true',
+                    help='Enable selenium testing')
+
+    args = vars(parser.parse_args())
+    return args
 
 if __name__ == '__main__':
     config = load_yaml('./configuration.yml')
@@ -38,6 +65,8 @@ if __name__ == '__main__':
 
     if config["pool_size"]:
         POOL_SIZE = config["pool_size"]
+
+    parse_arguments()
 
     tester_init_options=None
     if config["tester_init_options"]:
@@ -52,8 +81,12 @@ if __name__ == '__main__':
 
     testers = []
     for i in range(POOL_SIZE):
-        # testers.append( ( Tester.DRIVER_FIREFOX, x[i], tester_init_options) )
-        testers.append( ( Tester.DRIVER_CHROME, x[i], tester_init_options) )
+        testers.append( ( "RequestTester", x[i], tester_init_options) )
+
+        if args['use_selenium']:
+            # testers.append( ( SeleniumTester.DRIVER_FIREFOX, x[i], tester_init_options) )
+            testers.append( ( SeleniumTester.DRIVER_CHROME, x[i], tester_init_options) )
+
 
     with Pool(processes=POOL_SIZE) as pool:
         pool.map(run_instance, testers)

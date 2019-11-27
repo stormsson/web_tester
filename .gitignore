@@ -2,3 +2,4 @@ configuration.yml
 suite.yml
 docker/webdriver
 __pycache__
+*.log

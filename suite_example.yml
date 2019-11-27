@@ -9,3 +9,12 @@
         type: contains
         selector: p
         contains: Github
+
+    request_validators:
+      -
+        type: header
+        name: content-type
+        contains: html
+      -
+        type: http_status
+        is: 200
