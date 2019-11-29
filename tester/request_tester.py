@@ -14,8 +14,22 @@ class RequestTester(BaseTester):
     """
     fetch the url using requests
     """
-    def fetch_url(self, url, method="get"):
+    def fetch_url(self, t):
         r = True
+
+        url = t['url']
+        method="get"
+        try:
+            method = t['method']
+        except Exception as e:
+            pass
+
+        basic_auth = None
+        try:
+            basic_auth = t['basic_auth']
+            print(basic_auth)
+        except Exception as e:
+            pass
 
         try:
             self.request = requests.get(url)
@@ -31,6 +45,7 @@ class RequestTester(BaseTester):
     def apply_request_validators(self, validators):
         success = True
         reports = []
+
         for validator in validators:
             if validator['type'] == 'header':
                 header = validator['name']
@@ -86,7 +101,7 @@ class RequestTester(BaseTester):
             'success': True
         }
 
-        r = self.fetch_url(t['url'], method)
+        r = self.fetch_url(t)
 
         if r is not True:
             test_result['assertions'].append(r)

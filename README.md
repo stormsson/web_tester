@@ -6,13 +6,15 @@ A **FAST** tool to start testing with selenium.
 ## Installation
 
 The tester relies on a Docker image that can be built with
-`docker build -t webtester:latest ./docker`
+`docker build -t webtester:latest .`
 
 ## Usage
 
+Run `docker run --rm -ti -v $(pwd):/app webtester:latest python main.py -h` in order to see all available options
+
 ### Create a test session
 1) create a `suite.yml` file, structured as the example provided `suite_example.yml`
-2) run `docker run --rm -ti -v $(pwd):/app webtester:latest python main.py` from your project dir
+2) run `docker run --rm -ti -v $(pwd):/app webtester:latest` from your project dir
 
 by default the run only checks request validators, if you need to enable selenium testing run
 2) run `docker run --rm -ti -v $(pwd):/app webtester:latest python main.py --selenium`

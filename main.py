@@ -12,6 +12,7 @@ from tester.test_partition import TestPartition
 from multiprocessing import Process, Pool
 
 POOL_SIZE = 2
+DEFAULT_SUITE_FILE = './suite.yml'
 args = []
 
 def load_yaml(filePath):
@@ -31,15 +32,16 @@ def run_instance(test_setup):
             v = test_suite[0]['request_validators']
             if v:
                 t = RequestTester()
-        except KeyError as e:
+        except (KeyError, IndexError) as e:
             test_suite = False
+
     else:
         try:
             v = test_suite[0]['validators']
             if v :
                 t = SeleniumTester(driver_type=driver_type, init_options=init_options)
                 t.init_driver()
-        except KeyError as e:
+        except (KeyError, IndexError) as e:
             test_suite = False
 
 
@@ -56,17 +58,21 @@ def parse_arguments():
     parser.add_argument('--selenium', dest='use_selenium',action='store_true',
                     help='Enable selenium testing')
 
+    parser.add_argument('--test_file')
     args = vars(parser.parse_args())
+
     return args
 
 if __name__ == '__main__':
+    parse_arguments()
+
     config = load_yaml('./configuration.yml')
-    test_suite = load_yaml('./suite.yml')
+    suite_path = DEFAULT_SUITE_FILE if not args['test_file'] else args['test_file']
+    test_suite = load_yaml(suite_path)
 
     if config["pool_size"]:
         POOL_SIZE = config["pool_size"]
 
-    parse_arguments()
 
     tester_init_options=None
     if config["tester_init_options"]:

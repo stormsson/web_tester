@@ -1,4 +1,3 @@
-#FROM python:3.8-alpine
 FROM python:3.8.0-buster
 
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -51,16 +50,12 @@ RUN BASE_URL=https://github.com/mozilla/geckodriver/releases/download \
   && curl -sL "$BASE_URL/$VERSION/geckodriver-$VERSION-linux64.tar.gz" | \
     tar -xz -C /usr/local/bin
 
-#RUN apk update
-#RUN apk add curl
-#RUN apk add unzip nano bash chromium chromium-chromedriver
-#COPY webdriver/chromedriver /usr/local/bin/
-
-
-
 
 RUN mkdir /app
 COPY requirements.txt /app
+COPY tester/* /app/tester
+COPY main.py /app
+
 RUN pip install -r /app/requirements.txt
 RUN rm /app/requirements.txt
 
@@ -68,3 +63,5 @@ RUN useradd -u 1000 -m -U webdriver
 USER webdriver
 
 WORKDIR /app
+
+CMD ["python","main.py"]
