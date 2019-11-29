@@ -53,7 +53,7 @@ RUN BASE_URL=https://github.com/mozilla/geckodriver/releases/download \
 
 RUN mkdir /app
 COPY requirements.txt /app
-COPY tester/* /app/tester
+COPY tester/* /app/tester/
 COPY main.py /app
 
 RUN pip install -r /app/requirements.txt
