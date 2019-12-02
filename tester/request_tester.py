@@ -1,3 +1,4 @@
+
 import time
 import requests
 
@@ -18,24 +19,29 @@ class RequestTester(BaseTester):
         r = True
 
         url = t['url']
+        sanitized_url = url
+        using_basic_auth_str =""
+
         method="get"
         try:
             method = t['method']
         except Exception as e:
             pass
 
-        basic_auth = None
-        try:
-            basic_auth = t['basic_auth']
-            print(basic_auth)
-        except Exception as e:
-            pass
+        basic_auth = self.getEnvAuth()
+        if basic_auth:
+            using_basic_auth_str = "(Using Basic AUTH)"
+            if "http://" in t['url']:
+                t['url'] = t['url'].replace("http://", "http://"+basic_auth[0]+":"+basic_auth[1]+"@")
+            elif "https://" in t['url']:
+                t['url'] = t['url'].replace("https://", "https://"+basic_auth[0]+":"+basic_auth[1]+"@")
+
 
         try:
             self.request = requests.get(url)
         except Exception as e:
             r = {
-                'text': "Request Driver can access url: (%s) %s" % ( method.upper(), url ),
+                'text': "Request Driver can access url: (%s) %s %s " % ( method.upper(), sanitized_url, using_basic_auth_str ),
                 'success': False,
                 'error': str(e)
             }
@@ -62,8 +68,6 @@ class RequestTester(BaseTester):
                 validator_result = test_http_status(self.request, value)
                 reports.append(validator_result)
                 success = success and validator_result['success']
-
-
             else:
                 success = False
 
@@ -75,7 +79,6 @@ class RequestTester(BaseTester):
 
             if self.verbose:
                 print("checking url: %s" % t['url'])
-
 
             try:
                 request_validators = t['request_validators']

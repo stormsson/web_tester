@@ -1,5 +1,6 @@
-configuration.yml
-suite.yml
+*.yml
+!suite_example.yml
+!configuration_example.yml
 docker/webdriver
 __pycache__
 *.log

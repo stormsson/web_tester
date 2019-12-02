@@ -12,6 +12,18 @@ The tester relies on a Docker image that can be built with
 
 Run `docker run --rm -ti -v $(pwd):/app webtester:latest python main.py -h` in order to see all available options
 
+### Fetching urls with basic authentication
+All test urls can share a common basic auth configuration.
+In order to use it, 2 env variables are checked: `BASIC_AUTH_USER` and `BASIC_AUTH_PWD`.
+It is not necessary to add the basic auth in the urls provided in the yml file.
+
+This allows the test file to be pushed in a repo without worrying about the credentials.
+
+Example:
+
+`docker run --rm -ti -v $(pwd):/app -e BASIC_AUTH_USER=myusername -e BASIC_AUTH_PWD=mypassword webtester:latest`
+
+
 ### Create a test session
 1) create a `suite.yml` file, structured as the example provided `suite_example.yml`
 2) run `docker run --rm -ti -v $(pwd):/app webtester:latest` from your project dir
