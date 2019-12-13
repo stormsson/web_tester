@@ -72,15 +72,19 @@ They are currently defined in `tester/request_validators.py`
 
 ### http_status
 
+When an url is provided, by default, the tester checks for an HTTP 200 response
+
 ```yml
 -
     type: http_status
-    is: 200
+    is: 204
 ```
 
 | field | sample value | Description |
 |-------|--------------|-------------|
-| is | 200 | http status to check |
+| is | 204 | http status to check |
+
+
 
 
 ## Custom configuration

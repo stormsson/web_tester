@@ -52,6 +52,8 @@ class RequestTester(BaseTester):
         success = True
         reports = []
 
+        has_http_status_validator = False
+
         for validator in validators:
             if validator['type'] == 'header':
                 header = validator['name']
@@ -64,12 +66,19 @@ class RequestTester(BaseTester):
                 reports.append(validator_result)
                 success = success and validator_result['success']
             elif validator['type'] == 'http_status':
+                has_http_status_validator = True
                 value = validator['is']
                 validator_result = test_http_status(self.request, value)
                 reports.append(validator_result)
                 success = success and validator_result['success']
             else:
                 success = False
+
+        if not has_http_status_validator:
+            validator_result = test_http_status(self.request, 200)
+            reports.append(validator_result)
+            success = success and validator_result['success']
+
 
         return success, reports
 
