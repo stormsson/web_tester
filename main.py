@@ -66,17 +66,29 @@ def parse_arguments():
 if __name__ == '__main__':
     parse_arguments()
 
-    config = load_yaml('./configuration.yml')
+    try:
+        config = load_yaml('./configuration.yml')
+
+    except Exception as e:
+        config = {}
+
     suite_path = DEFAULT_SUITE_FILE if not args['test_file'] else args['test_file']
     test_suite = load_yaml(suite_path)
 
-    if config["pool_size"]:
+
+    try:
         POOL_SIZE = config["pool_size"]
+    except KeyError as e:
+        pass
+    except Exception as e:
+        raise e
 
 
     tester_init_options=None
-    if config["tester_init_options"]:
+    try:
         tester_init_options = config["tester_init_options"]
+    except KeyError as e:
+        pass
 
     print("starting test with %d parallel instances" % POOL_SIZE)
 
