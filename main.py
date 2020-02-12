@@ -58,6 +58,9 @@ def parse_arguments():
     parser.add_argument('--selenium', dest='use_selenium',action='store_true',
                     help='Enable selenium testing')
 
+    parser.add_argument('--verbose', "-v", dest='verbose',action='store_true',
+                    help='Enable verbose output (actually ignored)')
+
     parser.add_argument('--test_file')
     args = vars(parser.parse_args())
 
